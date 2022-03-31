@@ -41,14 +41,74 @@ provider "junos-ex-vlans" {
   password = var.juniper_user_password
 }
 
-module "vlans" {
-  // vlans VLAN_103 vlan-id 103 description "tf: devops VLAN"
-  vlan_name        = "VLAN_103"
-  vlan_description = "tf: devops VLAN"
-  vlan_id          = "103"
+module "vlan_101" {
+  // vlans VLAN_101 vlan-id 101 description "tf: devops VLAN"
+  vlan_name              = "VLAN_101"
+  vlan_description       = "tf: dns VLAN"
+  vlan_description_group = "vlan101_description"
+  vlan_id                = "101"
+  vlan_id_group          = "vlan101_id"
 
   // passing information into our provider
   source     = "./vlans"
+  providers  = { junos-ex-vlans = junos-ex-vlans }
+  depends_on = [junos-ex-vlans_destroycommit.commit-main]
+}
+
+module "vlan_102" {
+  // vlans VLAN_102 vlan-id 102 description "tf: dhcp VLAN"
+  vlan_name              = "VLAN_102"
+  vlan_description       = "tf: dhcp VLAN"
+  vlan_description_group = "vlan102_description"
+  vlan_id                = "102"
+  vlan_id_group          = "vlan102_id"
+
+  // passing information into our provider
+  source     = "./vlans"
+  providers  = { junos-ex-vlans = junos-ex-vlans }
+  depends_on = [junos-ex-vlans_destroycommit.commit-main]
+}
+
+module "vlan_103" {
+  // vlans VLAN_103 vlan-id 103 description "tf: devops VLAN"
+  vlan_name              = "VLAN_103"
+  vlan_description       = "tf: devops VLAN"
+  vlan_description_group = "vlan103_description"
+  vlan_id                = "103"
+  vlan_id_group          = "vlan103_id"
+
+  // passing information into our provider
+  source     = "./vlans"
+  providers  = { junos-ex-vlans = junos-ex-vlans }
+  depends_on = [junos-ex-vlans_destroycommit.commit-main]
+}
+
+module "vlan_104" {
+  // vlans VLAN_104 vlan-id 104 description "tf: devops VLAN"
+  vlan_name              = "VLAN_104"
+  vlan_description       = "tf: network services VLAN"
+  vlan_description_group = "vlan104_description"
+  vlan_id                = "104"
+  vlan_id_group          = "vlan104_id"
+
+  // passing information into our provider
+  source     = "./vlans"
+  providers  = { junos-ex-vlans = junos-ex-vlans }
+  depends_on = [junos-ex-vlans_destroycommit.commit-main]
+}
+
+module "vlan_105" {
+  // vlans VLAN_105 vlan-id 105 l3-interface irb.105 description "tf: management VLAN"
+  vlan_name              = "VLAN_105"
+  vlan_description       = "tf: management VLAN"
+  vlan_description_group = "vlan105_description"
+  vlan_id                = "105"
+  vlan_id_group          = "vlan105_id"
+  vlan_l3iface           = "irb.105"
+  vlan_l3iface_group     = "vlan105_l3_iface"
+
+  // passing information into our provider
+  source     = "./vlans_routed"
   providers  = { junos-ex-vlans = junos-ex-vlans }
   depends_on = [junos-ex-vlans_destroycommit.commit-main]
 }
@@ -64,7 +124,7 @@ resource "junos-ex-interfaces_destroycommit" "commit-main" {
 
 resource "junos-ex-vlans_commit" "commit-main" {
   resource_name = "commit"
-  depends_on    = [module.vlans]
+  depends_on    = [module.vlan_101, module.vlan_102, module.vlan_103, module.vlan_104, module.vlan_105]
 }
 
 resource "junos-ex-vlans_destroycommit" "commit-main" {

@@ -14,12 +14,12 @@ resource "junos-ex-vlans_VlansVlanDescription" "vlan_description" {
   description   = var.vlan_description
 }
 
-// Interface Mode
-// resource "junos-ex-vlans_VlansVlanL3__Interface" "vlan_l3iface" {
-//   resource_name = "vlan_103_L3_iface"
-//   l3__interface = "irb.103"
-//   name          = var.vlan_name
-// }
+// Routed Interface
+resource "junos-ex-vlans_VlansVlanL3__Interface" "vlan_l3iface" {
+  resource_name = var.vlan_l3iface_group
+  l3__interface = var.vlan_l3iface
+  name          = var.vlan_name
+}
 
 // VLAN ID
 resource "junos-ex-vlans_VlansVlanVlan__Id" "vlans" {

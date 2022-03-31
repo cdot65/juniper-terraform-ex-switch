@@ -27,3 +27,16 @@ variable "vlan_id_group" {
   type        = string
   description = "Name used for the VLAN ID configuration group"
 }
+
+// Layer 3 Interface
+variable "vlan_l3iface" {
+  type        = string
+  description = "Routed interface for the VLAN"
+}
+
+// Name of our L3 interface configuration group
+variable "vlan_l3iface_group" {
+  type        = string
+  description = "Name used for the L3 interface configuration group"
+}
+
