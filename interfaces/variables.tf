@@ -16,8 +16,30 @@ variable "subinterface_unit" {
   description = "Sub interface unit number"
 }
 
-// Interface VLAN
-variable "interface_vlan" {
+// Interface VLANs
+variable "interface_vlans" {
   type        = string
-  description = "VLAN assigned to interface"
+  description = "VLANs assigned to interface"
+}
+
+// Interface mode
+variable "interface_mode" {
+  type        = string
+  description = "Access or Trunk mode"
+}
+
+// Apply Group Names
+variable "interface_description_group" {
+  type        = string
+  description = "Name of interface description apply group"
+}
+
+variable "interface_mode_group" {
+  type        = string
+  description = "Name of interface mode apply group"
+}
+
+variable "interface_vlans_group" {
+  type        = string
+  description = "Name of interface VLAN members apply group"
 }

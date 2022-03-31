@@ -19,13 +19,119 @@ provider "junos-ex-interfaces" {
   password = var.juniper_user_password
 }
 
-module "interfaces" {
+module "iface_ge0" {
   // interface ge-0/0/0 description "tf: Raspberry Pi"
-  // interface ge-0/0/0 unit 0 family ethernet switching vlan members VLAN_104"
+  // interface ge-0/0/0 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
   interface_name        = "ge-0/0/0"
-  interface_description = "tf: Raspberry Pi"
   subinterface_unit     = "0"
-  interface_vlan        = "VLAN_104"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge0_mode"
+  interface_description_group = "ge0_description"
+  interface_vlans_group       = "ge0_vlans"
+
+  // passing information into our provider
+  source     = "./interfaces"
+  providers  = { junos-ex-interfaces = junos-ex-interfaces }
+  depends_on = [junos-ex-interfaces_destroycommit.commit-main]
+}
+
+module "iface_ge1" {
+  // interface ge-0/0/1 description "tf: Raspberry Pi"
+  // interface ge-0/0/1 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
+  interface_name        = "ge-0/0/1"
+  subinterface_unit     = "0"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge1_mode"
+  interface_description_group = "ge1_description"
+  interface_vlans_group       = "ge1_vlans"
+
+  // passing information into our provider
+  source     = "./interfaces"
+  providers  = { junos-ex-interfaces = junos-ex-interfaces }
+  depends_on = [junos-ex-interfaces_destroycommit.commit-main]
+}
+
+module "iface_ge2" {
+  // interface ge-0/0/2 description "tf: Raspberry Pi"
+  // interface ge-0/0/2 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
+  interface_name        = "ge-0/0/2"
+  subinterface_unit     = "0"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge2_mode"
+  interface_description_group = "ge2_description"
+  interface_vlans_group       = "ge2_vlans"
+
+  // passing information into our provider
+  source     = "./interfaces"
+  providers  = { junos-ex-interfaces = junos-ex-interfaces }
+  depends_on = [junos-ex-interfaces_destroycommit.commit-main]
+}
+
+module "iface_ge3" {
+  // interface ge-0/0/3 description "tf: Raspberry Pi"
+  // interface ge-0/0/3 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
+  interface_name        = "ge-0/0/3"
+  subinterface_unit     = "0"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge3_mode"
+  interface_description_group = "ge3_description"
+  interface_vlans_group       = "ge3_vlans"
+
+  // passing information into our provider
+  source     = "./interfaces"
+  providers  = { junos-ex-interfaces = junos-ex-interfaces }
+  depends_on = [junos-ex-interfaces_destroycommit.commit-main]
+}
+
+module "iface_ge4" {
+  // interface ge-0/0/4 description "tf: Raspberry Pi"
+  // interface ge-0/0/4 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
+  interface_name        = "ge-0/0/4"
+  subinterface_unit     = "0"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge4_mode"
+  interface_description_group = "ge4_description"
+  interface_vlans_group       = "ge4_vlans"
+
+  // passing information into our provider
+  source     = "./interfaces"
+  providers  = { junos-ex-interfaces = junos-ex-interfaces }
+  depends_on = [junos-ex-interfaces_destroycommit.commit-main]
+}
+
+module "iface_ge5" {
+  // interface ge-0/0/5 description "tf: Raspberry Pi"
+  // interface ge-0/0/5 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
+  interface_name        = "ge-0/0/5"
+  subinterface_unit     = "0"
+  interface_description = "tf: Raspberry Pi"
+  interface_mode        = "access"
+  interface_vlans       = "VLAN_104"
+
+  // name of our configuration apply groups
+  interface_mode_group        = "ge5_mode"
+  interface_description_group = "ge5_description"
+  interface_vlans_group       = "ge5_vlans"
 
   // passing information into our provider
   source     = "./interfaces"
@@ -115,7 +221,7 @@ module "vlan_105" {
 
 resource "junos-ex-interfaces_commit" "commit-main" {
   resource_name = "commit"
-  depends_on    = [module.interfaces]
+  depends_on    = [module.iface_ge0, module.iface_ge1, module.iface_ge2, module.iface_ge3, module.iface_ge4, module.iface_ge5]
 }
 
 resource "junos-ex-interfaces_destroycommit" "commit-main" {
