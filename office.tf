@@ -163,6 +163,23 @@ module "iface_ge11" {
   depends_on = [junos-ex-interfaces_destroycommit.commit-main]
 }
 
+resource "junos-ex-interfaces_commit" "commit-main" {
+  resource_name = "commit"
+  depends_on = [
+    module.iface_ge0,
+    module.iface_ge1,
+    module.iface_ge2,
+    module.iface_ge3,
+    module.iface_ge4,
+    module.iface_ge5,
+    module.iface_ge11
+  ]
+}
+
+resource "junos-ex-interfaces_destroycommit" "commit-main" {
+  resource_name = "destroycommit"
+}
+
 provider "junos-ex-vlans" {
   host     = "office"
   port     = var.juniper_ssh_port
@@ -243,38 +260,6 @@ module "vlan_105" {
   depends_on = [junos-ex-vlans_destroycommit.commit-main]
 }
 
-provider "junos-ex-mstp" {
-  host     = "office"
-  port     = var.juniper_ssh_port
-  sshkey   = var.juniper_ssh_key
-  username = var.juniper_user_name
-  password = var.juniper_user_password
-}
-
-module "mstp" {
-  // passing information into our provider
-  source     = "./mstp"
-  providers  = { junos-ex-mstp = junos-ex-mstp }
-  depends_on = [junos-ex-mstp_destroycommit.commit-main]
-}
-
-resource "junos-ex-interfaces_commit" "commit-main" {
-  resource_name = "commit"
-  depends_on = [
-    module.iface_ge0,
-    module.iface_ge1,
-    module.iface_ge2,
-    module.iface_ge3,
-    module.iface_ge4,
-    module.iface_ge5,
-    module.iface_ge11
-  ]
-}
-
-resource "junos-ex-interfaces_destroycommit" "commit-main" {
-  resource_name = "destroycommit"
-}
-
 resource "junos-ex-vlans_commit" "commit-main" {
   resource_name = "commit"
   depends_on = [
@@ -288,6 +273,21 @@ resource "junos-ex-vlans_commit" "commit-main" {
 
 resource "junos-ex-vlans_destroycommit" "commit-main" {
   resource_name = "destroycommit"
+}
+
+provider "junos-ex-mstp" {
+  host     = "office"
+  port     = var.juniper_ssh_port
+  sshkey   = var.juniper_ssh_key
+  username = var.juniper_user_name
+  password = var.juniper_user_password
+}
+
+module "mstp" {
+  // passing information into our provider
+  source     = "./mstp"
+  providers  = { junos-ex-mstp = junos-ex-mstp }
+  depends_on = [junos-ex-mstp_destroycommit.commit-main]
 }
 
 resource "junos-ex-mstp_commit" "commit-main" {
