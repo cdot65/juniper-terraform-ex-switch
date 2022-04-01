@@ -8,6 +8,10 @@ terraform {
       source  = "cdot65/junos-ex-vlans"
       version = "0.0.1"
     }
+    junos-ex-mstp = {
+      source  = "cdot65/junos-ex-mstp"
+      version = "0.0.2"
+    }
   }
 }
 
@@ -40,11 +44,11 @@ module "iface_ge0" {
 }
 
 module "iface_ge1" {
-  // interface ge-0/0/1 description "tf: Raspberry Pi"
+  // interface ge-0/0/1 description "tf: netops3 server"
   // interface ge-0/0/1 unit 0 family ethernet switching interface-mode access vlan members VLAN_104"
   interface_name        = "ge-0/0/1"
   subinterface_unit     = "0"
-  interface_description = "tf: Raspberry Pi"
+  interface_description = "tf: netops3.dmz.home"
   interface_mode        = "access"
   interface_vlans       = "VLAN_104"
 
@@ -144,7 +148,7 @@ module "iface_ge11" {
   // interface ge-0/0/11 unit 0 family ethernet switching interface-mode trunk vlan members all"
   interface_name        = "ge-0/0/11"
   subinterface_unit     = "0"
-  interface_description = "tf: Raspberuplink to closet"
+  interface_description = "tf: uplink to closet"
   interface_mode        = "trunk"
   interface_vlans       = "all"
 
@@ -239,6 +243,21 @@ module "vlan_105" {
   depends_on = [junos-ex-vlans_destroycommit.commit-main]
 }
 
+provider "junos-ex-mstp" {
+  host     = "office"
+  port     = var.juniper_ssh_port
+  sshkey   = var.juniper_ssh_key
+  username = var.juniper_user_name
+  password = var.juniper_user_password
+}
+
+module "mstp" {
+  // passing information into our provider
+  source     = "./mstp"
+  providers  = { junos-ex-mstp = junos-ex-mstp }
+  depends_on = [junos-ex-mstp_destroycommit.commit-main]
+}
+
 resource "junos-ex-interfaces_commit" "commit-main" {
   resource_name = "commit"
   depends_on = [
@@ -268,5 +287,16 @@ resource "junos-ex-vlans_commit" "commit-main" {
 }
 
 resource "junos-ex-vlans_destroycommit" "commit-main" {
+  resource_name = "destroycommit"
+}
+
+resource "junos-ex-mstp_commit" "commit-main" {
+  resource_name = "commit"
+  depends_on = [
+    module.mstp
+  ]
+}
+
+resource "junos-ex-mstp_destroycommit" "commit-main" {
   resource_name = "destroycommit"
 }
