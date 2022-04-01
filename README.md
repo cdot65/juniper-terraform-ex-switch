@@ -6,11 +6,13 @@
 
 The goal of this project is to provide an example method to interact with Juniper EX products with Terraform.
 
-This project will build
+### VLANs
+
+We will need to create several VLAN objects, some with routed interfaces and others without.
 
 - create vlan with a name of VLAN_103
 - apply a description of `tf: devops VLAN` to our new vlan
-- associate a routed interface to this vlan
+- associate a routed interface to this vlan (optional)
 
 ```
 VLAN_103 {
@@ -19,12 +21,16 @@ VLAN_103 {
 }
 ```
 
-- create interface `ge-0/0/0`
-- apply a description of `tf: Raspberry Pi` to our new interface
-- create a sub-interface of `ge-0/0/0` with a unit ID of `0`
-- set interface `ge-0/0/0.0` to ethernet-switching family
-- configure interfage `ge-0/0/0.0` in access mode
-- assign vlan `VLAN_104` to the interface
+### Interfaces
+
+Interfaces are configured in layer 2 mode exclusively, as of now. Will update later to support routed interfaces.
+
+- create interface
+- apply a description to our new interface
+- create a sub-interface with a unit ID
+- set interface to ethernet-switching family
+- configure interfage mode
+- assign vlan to the interface
 
 ```
 ge-0/0/0 {
@@ -35,6 +41,34 @@ ge-0/0/0 {
             vlan {
                 members VLAN_104;
             }
+        }
+    }
+}
+```
+
+### MSTP
+
+Standardized MSTP configuration file, no variables are needed as this should be copy/pasted across the fleet.
+
+- MSTP configuration name
+- MSTP bridge priority
+- MSTP interfaces and their respective modes
+- MSTI instance name
+- VLANs associated to the MSTI instance
+
+```
+protocols {
+    mstp {
+        configuration-name brookefield;
+        bridge-priority 32k;
+        interface ge-0/0/11 {
+            mode point-to-point;
+        }
+        interface all {
+            edge;
+        }
+        msti 1 {
+            vlan 1-4094;
         }
     }
 }
